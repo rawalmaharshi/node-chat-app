@@ -15,14 +15,20 @@ app.use(express.static(publicPath));
 io.on('connection', function (socket) {
     console.log(`New user connected`);
 
-    socket.emit('newMessage', {
-        from: 'mikey@example.com',
-        text: 'Hey, What is going on?',
-        createdAt: 123
-    });
+    //socket.emit only emits to a particular connection.
+    // socket.emit('newMessage', {
+    //     from: 'mikey@example.com',
+    //     text: 'Hey, What is going on?',
+    //     createdAt: 123
+    // });
 
     socket.on('createMessage', (newMessage) => {
         console.log('createMessage', newMessage);
+        io.emit('newMessage', {
+            from: newMessage.from,
+            text: newMessage.text,
+            createdAt: new Date().getTime()
+        })
     });
 
     socket.on('disconnect', function () {
